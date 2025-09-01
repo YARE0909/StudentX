@@ -1,26 +1,270 @@
+/* Tailwind v4 CSS-first setup */
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+:root[data-theme="light"] {
+  color-scheme: light;
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+}
+
+@theme {
+  /* Brand core */
+  --color-brand-50: #f5f7ff;
+  --color-brand-100: #e8ecff;
+  --color-brand-200: #cfd7ff;
+  --color-brand-300: #aab9ff;
+  --color-brand-400: #7f92ff;
+  --color-brand-500: #5a6dff;
+  --color-brand-600: #3d4df5;
+  --color-brand-700: #2f3acc;
+  --color-brand-800: #2530a3;
+  --color-brand-900: #1f297f;
+
+  --color-bg: light-dark(#ffffff, #0a0a0a);
+  --color-surface: light-dark(#ffffff, #0b0c10);
+  --color-surface-2: light-dark(#f7f8fa, #0e1116);
+  --color-fg: light-dark(#0b0d12, #e8ecf2);
+  --color-muted: light-dark(#4b5563, #9aa4b2);
+
+  --color-accent-1: #7c3aed;
+  --color-accent-2: #06b6d4;
+  --color-accent-3: #22c55e;
+  --color-accent-4: #f59e0b;
+  --color-hot-pink: #ff4d9d;
+
+  --radius-sm: 10px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --radius-xl: 28px;
+
+  --shadow-glass: 0 1px 0 rgba(255 255 255 / 0.15) inset,
+    0 0 1px rgba(255 255 255 / 0.3) inset, 0 8px 40px rgba(0 0 0 / 0.35);
+  --shadow-ring: 0 0 0 1px rgba(255 255 255 / 0.12) inset,
+    0 0 0 1px rgba(0 0 0 / 0.4);
+  --border-contrast: color-mix(in oklab, var(--color-fg) 12%, transparent);
+
+  --grad-brand: linear-gradient(
+    135deg,
+    var(--color-brand-500),
+    var(--color-accent-2)
+  );
+  --grad-holo: conic-gradient(
+    from 260deg at 50% 50%,
+    #7c3aed80,
+    #22c55e80,
+    #06b6d480,
+    #f59e0b80,
+    #ff4d9d80,
+    #7c3aed80
+  );
+
+  --anim-slow: 28s;
+  --anim-slower: 36s;
+  --anim-slowest: 44s;
+  --easing-liquid: cubic-bezier(0.45, 0.05, 0.25, 0.95);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-header: var(--font-zilla);
+  --font-main: var(--font-roboto);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@custom-variant dark (&:where([data-theme="dark"] *));
+@custom-variant light (&:where([data-theme="light"] *));
+
+@layer base {
+  html,
+  body {
+    @apply h-full;
+  }
+  body {
+    font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
+    @apply bg-bg text-fg;
+  }
+  .container {
+    @apply max-w-6xl;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer utilities {
+  .glass {
+    background: color-mix(in oklab, var(--color-surface) 20%, transparent);
+    -webkit-backdrop-filter: saturate(160%) blur(2px);
+    backdrop-filter: saturate(160%) blur(2px);
+    border: 1px solid
+      color-mix(in oklab, var(--color-surface) 80%, var(--border-contrast));
+    box-shadow: var(--shadow-glass);
+  }
+
+  .glass-strong {
+    background: color-mix(in oklab, var(--color-surface) 80%, transparent);
+    -webkit-backdrop-filter: saturate(180%) blur(8px);
+    backdrop-filter: saturate(180%) blur(8px);
+    border: 1px solid
+      color-mix(in oklab, var(--color-surface) 85%, var(--border-contrast));
+    box-shadow: var(--shadow-glass);
+  }
+
+  .btn {
+    @apply inline-flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-medium transition duration-500 cursor-pointer;
+    background: color-mix(in oklab, var(--color-surface) 60%, transparent);
+    -webkit-backdrop-filter: saturate(160%) blur(4px);
+    backdrop-filter: saturate(160%) blur(4px);
+    border: 1px solid
+      color-mix(in oklab, var(--color-surface) 80%, var(--border-contrast));
+    box-shadow: var(--shadow-glass);
+  }
+
+  .btn:hover {
+    background: var(--grad-holo);
+  }
+
+  .btn-primary {
+    background: var(--grad-brand);
+    color: white;
+    border: 1px solid rgba(255 255 255 / 0.18);
+    box-shadow: 0 10px 30px rgba(90, 109, 255, 0.22);
+  }
+
+  .btn-primary:hover {
+    filter: brightness(1.05);
+  }
+
+  .chip {
+    @apply inline-flex items-center gap-1 rounded-full px-4 py-1.5 text-xs font-extrabold font-header;
+    background: color-mix(in oklab, var(--color-surface) 60%, transparent);
+    -webkit-backdrop-filter: saturate(160%) blur(4px);
+    backdrop-filter: saturate(160%) blur(4px);
+    border: 1px solid
+      color-mix(in oklab, var(--color-surface) 80%, var(--border-contrast));
+    box-shadow: var(--shadow-glass);
+  }
+}
+
+.prose h1 {
+  @apply text-4xl/tight font-semibold;
+}
+.prose h2 {
+  @apply text-2xl/tight font-semibold mt-10;
+}
+.prose p {
+  @apply text-base text-muted mt-4;
+}
+
+.text-fg {
+  color: var(--color-fg);
+}
+.text-muted {
+  color: var(--color-muted);
+}
+.bg-bg {
+  background-color: var(--color-bg);
+}
+
+.bg-liquid-blob {
+  position: absolute;
+  width: 600px;
+  height: 600px;
+  border-radius: 50%;
+  filter: blur(120px);
+  opacity: 0.4;
+  mix-blend-mode: screen;
+  animation: blobFloat var(--anim-slowest) var(--easing-liquid) infinite
+    alternate;
+}
+
+.blob-1 {
+  background: radial-gradient(
+    circle at 30% 30%,
+    var(--color-accent-1),
+    transparent 70%
+  );
+  top: -100px;
+  left: -200px;
+  animation-delay: 0s;
+}
+
+.blob-2 {
+  background: radial-gradient(
+    circle at 70% 40%,
+    var(--color-accent-2),
+    transparent 70%
+  );
+  bottom: -150px;
+  right: -150px;
+  animation-delay: 8s;
+}
+
+.blob-3 {
+  background: radial-gradient(
+    circle at 50% 60%,
+    var(--color-accent-3),
+    transparent 70%
+  );
+  top: 40%;
+  left: 50%;
+  animation-delay: 16s;
+}
+
+.bg-grid-mask {
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(
+      var(--grid-line-color-1) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      90deg,
+      var(--grid-line-color-2) 1px,
+      transparent 1px
+    );
+  background-size: 40px 40px;
+  mask-image: radial-gradient(
+    circle at center,
+    rgba(0, 0, 0, 0.6),
+    transparent 70%
+  );
+  -webkit-mask-image: radial-gradient(
+    circle at center,
+    rgba(0, 0, 0, 0.4),
+    transparent 70%
+  );
+}
+
+/* Theme-aware grid line colors */
+:root[data-theme="light"] {
+  --grid-line-color-1: rgba(0, 0, 0, 0.2); /* Slightly visible on light bg */
+  --grid-line-color-2: rgba(0, 0, 0, 0.12);
+}
+
+:root[data-theme="dark"] {
+  --grid-line-color-1: rgba(255, 255, 255, 0.2); /* Stronger on dark bg */
+  --grid-line-color-2: rgba(255, 255, 255, 0.12);
+}
+
+
+@keyframes blobFloat {
+  0% {
+    transform: translate(0, 0) scale(1);
+  }
+  33% {
+    transform: translate(50px, -30px) scale(1.05);
+  }
+  66% {
+    transform: translate(-40px, 20px) scale(0.98);
+  }
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bg-liquid-blob {
+    filter: blur(40px);
+    animation: none !important;
+  }
+  .bg-grid-mask {
+    animation: none !important;
+  }
 }
